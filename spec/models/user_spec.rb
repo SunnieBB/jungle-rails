@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject {described_class.new(:name => 'Sun', :email => 'sun@gmail.com', :password => "128", :password_confirmation => "128")}
+  subject {described_class.new(name: 'Sun', email: 'sun@gmail.com', password: "128", password_confirmation: "128")}
   describe 'Validation' do
   
     it 'saves successfully when all four fields are set' do
@@ -40,7 +40,7 @@ RSpec.describe User, type: :model do
     end
     
     it 'fails to save when email is not unique (not case sensitive)' do
-      User.create(:name => 'Sun', :email => 'sun@gmail.com', :password => "128", :password_confirmation => "128", :password_digest => "111")
+      User.create(name: 'Sun', email: 'sun@gmail.com', password: "128", password_confirmation: "128", password_digest: "111")
       subject.valid?
       expect(subject.errors).not_to be_empty
     end
