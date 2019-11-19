@@ -47,7 +47,7 @@ RSpec.describe User, type: :model do
     end
     
     it 'fails to save when email is not unique (not case sensitive)' do
-      User.create(:first_name => 'Sun', :last_name => 'Sun', :email => 'sun@gamil.com', :password => "128", :password_confirmation => "128", :password_digest => "111")
+      User.create(:first_name => 'Sun', :last_name => 'Sun', :email => 'sun@gmail.com', :password => "128", :password_confirmation => "128", :password_digest => "111")
       subject.valid?
       expect(subject.errors).not_to be_empty
     end
@@ -60,4 +60,31 @@ RSpec.describe User, type: :model do
     end
 
   end
+
+  describe '.authenticate_with_credentials' do
+    it 'returns user if succesfully authenticated' do
+      subject.save
+      user = User.authenticate_with_credentials('sun@gmail.com', '128')
+      expect(subject).to be == user
+    end
+
+    it 'returns nil if not successfully authenticated' do
+      subject.save
+      user = User.authenticate_with_credentials('sun@gmail.com', 'sss')
+      expect(user).to be == nil
+    end
+
+    it 'authenticates and users if user type white space before / after email' do
+      subject.save
+      user = User.authenticate_with_credentials(' sun@gmail.com ', '128')
+      expect(subject).to be == user
+    end
+
+    it 'authenticates and users if users type lower and upper case in email' do
+      subject.save
+      user = User.authenticate_with_credentials('sUn@gMaIl.com', '128')
+      expect(subject).to be == user
+    end
+  end
+
 end
